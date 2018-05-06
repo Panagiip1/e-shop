@@ -1,0 +1,59 @@
+gia view slides
+
+<!--
+
+					<div class="row">
+					  <div class="col"> <div class="col-lg-12 ">
+					        <div class="card" style="width: 166px;">
+					        	<div class="card-header" align="center">
+								    <h6><?php echo $slide_name; ?></h6>
+								</div>
+					          <a href="index.php?view_products" class="btn btn-primary">
+					          <div class="card-body">
+					        	<div class="row">
+					        		<div class="col-md-4">
+					        			<img src="slides_images/<?php echo $slide_image; ?>" style="width: 100px;">
+					        		</div>
+		
+					        	</div>
+					          </div>
+					          </a>
+					         
+						          <div style="text-align:center">
+						          	 <a href="index.php?delete_slide=<?php echo $slide_id;  ?>" style="float:left">
+						          	 	<i class="fas fa-trash-alt"></i> Διαγραφή
+						          	 </a>
+						          	 <a href="index.php?edit_slide=<?php echo $slide_id;  ?>" style="float:right">
+						          	 	<i class="fas fa-pencil-alt"></i> Edit
+						          	 </a>
+								  </div>
+					             	
+					       </div>
+					    </div></div>
+
+					  -->
+
+
+
+					<div class="row">
+					  <div class="col"> <div class="col-lg-12">
+					  	<div class="container-fluid">
+					       		<div class="card" style="width: 8rem;">
+					       			 <h6><?php echo $slide_name; ?></h6>									
+  							<div class="card-body">
+     							<div class="card-body">
+					        	<div class="row">
+					        		<div class="col-md-12 ">
+					        			<div class="column">
+    										<img src="slides_images/<?php echo $slide_image; ?>" style="width: 4rem;">
+  										</div>
+					        		</div>
+					        	</div>
+					          </div>
+   
+  						</div>
+				</div>
+					             	
+					       </div>
+					    </div></div>
+			  

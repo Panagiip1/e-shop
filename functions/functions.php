@@ -1,0 +1,423 @@
+<?php
+
+$db = mysqli_connect("localhost","root","panagiip1988","ecom_store");
+
+
+/// IP address code
+
+function getRealUserIp(){
+  switch(true){
+    case (!empty($_SERVER['HTTP_X_REAL_IP'])) : return $_SERVER['HTTP_X_REAL_IP'];
+    case (!empty($_SERVER['HTTP_CLIENT_IP'])) : return $_SERVER['HTTP_CLIENT_IP'];
+    case (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) : return $_SERVER['HTTP_X_FORWARDED_FOR'];
+    default : return $_SERVER['REMOTE_ADDR'];
+
+  }
+}
+
+function add_cart(){
+
+
+global $db;
+
+if(isset($_GET['add_cart'])){
+
+
+$ip_add = getRealUserIp();
+
+$p_id = $_GET['add_cart'];
+
+$product_qty = $_POST['product_qty'];
+
+$product_size = $_POST['product_size'];
+
+$check_product = "select * from cart where ip_add='$ip_add' AND p_id='$p_id'";
+
+$run_check = mysqli_query($db,$check_product);
+
+if(mysqli_num_rows($run_check)>0) {
+
+echo "<script>alert('Αυτό το προιόν είναι ήδη στην Κάρτα σου')</script>";
+
+echo "<script>window.open('details.php?pro_id=$p_id','_self')</script>";
+
+}
+else {
+
+$query = "insert into cart (p_id,ip_add,qty,size) values ('$p_id','$ip_add','$product_qty','$product_size')";
+
+$run_query = mysqli_query($db,$query);
+
+echo "<script>window.open('details.php?pro_id=$p_id','_self')</script>";
+
+
+}
+
+}
+
+
+
+}
+
+
+/// antikeimena shopping
+
+function items(){
+
+global $db;
+
+$ip_add = getRealUserIp();
+
+$get_items = "select * from cart where ip_add='$ip_add'";
+
+$run_items = mysqli_query($db,$get_items);
+
+$count_items = mysqli_num_rows($run_items);
+
+echo $count_items;
+
+
+
+}
+
+/// Sulokikh timh
+
+function total_price(){
+
+global $db;
+
+$ip_add = getRealUserIp();
+
+$total = 0;
+
+$select_cart = "select * from cart where ip_add='$ip_add'";
+
+$run_cart = mysqli_query($db,$select_cart);
+
+while($record=mysqli_fetch_array($run_cart)){
+
+$pro_id = $record['p_id'];
+$pro_qty = $record['qty'];
+
+$get_price = "select * from products where product_id='$pro_id'";
+
+$run_price = mysqli_query($db,$get_price);
+
+while($row_price=mysqli_fetch_array($run_price)){
+
+$sub_total = $row_price['product_price']*$pro_qty;
+
+$total += $sub_total;
+
+}
+
+
+
+}
+
+echo "$" . $total;
+
+
+}
+
+
+function getPro() {
+
+global $db;
+
+$get_products = "select * from products order by 1 DESC LIMIT 0,8";
+
+$run_products = mysqli_query($db,$get_products);
+
+while($row_products=mysqli_fetch_array($run_products)) {
+
+$pro_id = $row_products['product_id'];
+
+$pro_title = $row_products['product_title'];
+$pro_desc = $row_products['product_desc'];
+$pro_price = $row_products['product_price'];
+$pro_img1 = $row_products['product_img1'];
+
+echo "
+
+  <div class='col-md-3' style='margin-bottom: 5px; margin-right: 8px;'>
+   <div class='card1'>
+    <div class='flex'>
+    <div class='product_one' style='padding: 5px;margin-left: 3px; margin-bottom: 5px;'>
+      <div class='banner'>
+        <a href='#'><img src='admin_area/product_images/$pro_img1' width='200px' height='350px'></a>
+      </div>
+        <div class='overlay'>
+          <div class='content'>
+           <a href='details.php?pro_id=$pro_id'><i class='fas fa-shopping-basket fa-3x'></i></a>
+          </div>
+        </div>
+
+    </div>
+   </div>
+
+    <div class='product_text text-center'>
+      <h6> <a href='details.php?pro_id=$pro_id'>$pro_title</a></h6>
+    </div>
+
+    <div class='star_rating' align='middle'>
+      <img src='images/star1.png'>
+      <img src='images/star1.png'>
+      <img src='images/star1.png'>
+      <img src='images/star1.png'>
+      <img src='images/star2.png'>
+    </div>
+    <div class='product_description text-center'>
+      $pro_desc 
+    </div>
+    <div class='product_price'>
+      <div class='price' style='text-shadow: 0 0 3px gray;'>
+         $pro_price €
+        <div class='btn btn-success'>
+        <i class='fas fa-shopping-cart'></i> Βάλτο στο Καλάθι
+        </div>
+          <a href='details.php?pro_id=$pro_id'><div class='btn btn-primary'>Περισσότερα... </div></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+";
+
+}
+
+}
+
+function getPCats() {
+
+	global $db;
+
+	$get_p_cats = "select * from product_categories";
+
+	$run_p_cats = mysqli_query($db,$get_p_cats);
+
+	while($row_p_cats = mysqli_fetch_array($run_p_cats)) {
+
+	$p_cat_id = $row_p_cats['p_cat_id'];
+
+	$p_cat_title = $row_p_cats['p_cat_title'];
+
+	echo "<li class='list-group-item'><a href='shop.php?p_cat=$p_cat_id'> $p_cat_title </a></li>";
+}
+
+}
+
+
+function getCats() {
+
+  global $db;
+
+
+  $get_cats = "select * from categories";
+
+  $run_cats = mysqli_query($db,$get_cats);
+
+  while($row_cats = mysqli_fetch_array($run_cats)) {
+
+  $cat_id = $row_cats['cat_id'];
+
+  $cat_title = $row_cats['cat_title'];
+
+  echo "<li class='list-group-item'><a href='shop.php?cat=$cat_id'> $cat_title </a></li>";
+}
+
+}
+
+
+function getpcatpro() {
+
+  global $db;
+
+  if(isset($_GET['p_cat'])) {
+
+    $p_cat_id = $_GET['p_cat'];
+
+    $get_p_cat = "select * from product_categories where p_cat_id='$p_cat_id'";
+
+    $run_p_cat = mysqli_query($db,$get_p_cat);
+
+    $row_p_cat = mysqli_fetch_array($run_p_cat);
+
+    $p_cat_title = $row_p_cat['p_cat_title'];
+
+    $p_cat_desc = $row_p_cat['p_cat_desc'];
+
+    $get_products = "select * from products where p_cat_id='$p_cat_id'";
+
+    $run_products = mysqli_query($db,$get_products);
+
+    $count = mysqli_num_rows($run_products);
+
+    if($count==6) {
+
+      echo "
+
+      <div class='box'>
+        <h1> Δεν Βρέθηκαν Καθόλου Προιόντα </h1>
+      </div>
+      ";
+    }else{
+
+      echo "
+
+      <div class='box'>
+       <h1> $p_cat_title </h1>
+       <p>$p_cat_desc</p>
+      </div>
+      ";
+
+    }
+
+    while($row_products = mysqli_fetch_array($run_products)) {
+
+      $pro_id = $row_products['product_id'];
+
+      $pro_title = $row_products['product_title'];
+
+      $pro_price = $row_products['product_price'];
+
+      $pro_img1 = $row_products['product_img1'];
+
+      echo "
+
+      <div class='well text-center'></div>
+        <div class='row'>
+          <div class='product_one' style='width: 246px; padding: 1px;margin-left: 3px;margin-right:4px;'>
+          <div class='col-md-7'>
+            <a href='details.php?pro_id=$pro_id'>
+              <img src='admin_area/product_images/$pro_img1' width='60%'>
+            </a>
+          </div>
+              <div class='product_text'>
+                <div class='product_description'>
+                  $pro_desc 
+                </div>
+              </div>
+              <div class='product_price' style='width: 246px; padding: 1px;margin-left: 15px;margin-right:6px;'>
+                <div class='price'>
+                  $pro_price €
+                  <div class='btn btn-success'>
+                    Βάλτο στο Καλάθι
+                  </div>
+                  <a href='details.php?pro_id=$pro_id'><div class='btn btn-primary'>Περισσότερα... </div></a>
+                </div>
+              </div>
+            </div>  
+        <div class='col'></div>
+      </div>
+           
+
+
+      ";
+
+    }
+
+  }
+
+}
+
+function getcatpro() {
+
+  global $db;
+
+  if(isset($_GET['cat'])) {
+
+    $cat_id = $_GET['cat'];
+
+    $get_cat = "select * from categories where cat_id='$cat_id'";
+
+    $run_cat = mysqli_query($db,$get_cat);
+
+    $row_cat = mysqli_fetch_array($run_cat);
+
+    $cat_title = $row_cat['cat_title'];
+
+    $cat_desc = $row_cat['cat_desc'];
+
+    $get_products = "select * from products where cat_id='$cat_id'";
+
+    $run_products = mysqli_query($db,$get_products);
+
+    $count = mysqli_num_rows($run_products);
+
+    if($count==0) {
+
+      echo "
+
+        <div class='box'>
+          <h1> Δεν Βρέθηκαν Καθόλου Προιόντα </h1>
+        </div>
+
+
+      ";
+
+    }
+    else{
+
+      echo "
+
+       <div class='box'>
+          <h1> $cat_title </h1>
+          <p> $cat_desc </p>
+       </div>
+
+      ";
+
+    }
+
+    while($row_products=mysqli_fetch_array($run_products)) {
+
+      $pro_id = $row_products['product_id'];
+      $pro_title = $row_products['product_title'];
+      $pro_price = $row_products['product_price'];
+      $pro_desc = $row_products['product_desc'];
+      $pro_img1 = $row_products['product_img1'];
+
+      echo "
+
+         <div class='well text-center'></div>
+        <div class='row'>
+          <div class='product_one' style='width: 246px; padding: 1px;margin-left: 3px;margin-right:4px;'>
+            <div class='col-md-6'>
+              <img src='admin_area/product_images/$pro_img1' width='70%'>
+            </div>
+              <div class='product_text'>
+                <div class='product_description'>
+                  $pro_desc 
+                </div>
+              </div>
+              <div class='product_price'>
+                <div class='price' >
+                  $pro_price €
+                  <div class='btn btn-success'>
+                    Βάλτο στο Καλάθι
+                  </div>
+                  <a href='details.php?pro_id=$pro_id'><div class='btn btn-primary'>Περισσότερα... </div></a>
+                </div>
+              </div>
+            </div>  
+        <div class='col'></div>
+      </div>
+
+
+      ";
+
+    }
+
+
+  }
+}
+
+
+?>
+

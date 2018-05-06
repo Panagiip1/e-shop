@@ -1,0 +1,170 @@
+line 225 sto shop.php mporoume na prothesoyme style='padding: 20px;margin-left: 60px;'
+
+
+
+sto arxeio details.php sthn grammh 354 
+
+tha add auto gia like
+
+        <?php
+
+        $get_products = "select * products order by 1 LIMIT 0,3";
+
+        $run_products = mysqli_query($con,$get_products);
+
+        while($row_products = mysqli_fetch_array($run_products)) {
+
+          $pro_id = $row_products['product_id'];
+          $pro_title = $row_products['product_title'];
+          $pro_price = $row_products['product_price'];
+          $pro_img1 = $row_products['product_img1'];
+         
+          echo "
+
+         <div class='col-md-4'>
+          <a href='details.php?pro_id=$pro_id' class='thumbs'>
+            <img src='admin_area/product_images/$pro_img1' width='90%'' class='img-responsive'>
+          </a>
+          <div class='text'>
+            <h4><a href='details.php'>Marvel Black Kids POLO T-Shirt</a></h4>
+            <p class='price text-center'> 50€</p>
+          </div>
+        </div>
+
+          ";
+
+
+        }
+
+        ?>
+
+
+sto arxeio card.php sthn grammh 354 
+gia likes 
+
+<div class="row">
+  <div class="col-md-2"></div>
+  <div class="col-md-8">
+     <div class="box">
+        <h3 class="text-center">Σας Αρεσαν και αυτά τα Προιόντα</h3>
+     </div>
+
+     <?php
+
+     $get_products = "select * from products order by rand() LIMIT 0,3";
+
+     $run_products = mysqli_query($con,$get_products);
+
+     while($row_products=mysqli_fetch_array($run_products)){
+
+      $pro_id = $row_products['product_id'];
+      $pro_title = $row_products['product_title'];
+      $pro_price = $row_products['product_price'];
+      $pro_img1 = $row_products['product_img1'];
+      
+      echo "
+
+      <div class='row; id='thumbs'>
+        <div class='col-md-4'>
+          <a href='details.php?pro_id=$pro_id' class='thumbs'>
+            <img src='admin_area/product_images/$pro_img1' width='90%' class='img-responsive'>
+          </a>
+          <div class='text'>
+            <h4><a href='details.php?pro_id=$pro_id'>$pro_title</a></h4>
+            <p class='price text-center'> $pro_price €</p>
+          </div>
+        </div>
+      </div>
+      ";
+
+     }
+
+     ?>
+     
+
+
+     to shop.php
+     line 491
+
+
+                for ($i=1; i<=$total_pages; $i++) {
+                  echo "
+                    <li class='page-item'><a class='page-link' href='shop.php?page=".$i."'>".$i."</a></li>
+
+                  ";
+                };
+
+
+
+functions
+
+<div class='col-md-4'>
+   <div class='card' style='width: 20rem;'>
+    <div class='card-header'>
+    <div class='product_one' style='padding: 5px;margin-left: 3px;'>
+      <img src='admin_area/product_images/$pro_img1' width='70%'>
+    </div>
+     </div>
+  <div class='card-body'>
+    <div class='product_text'>
+      <h6> <a href='details.php?pro_id=$pro_id'>$pro_title</a></h6>
+    </div>
+
+    <div class='star_rating' align='middle'>
+      <img src='images/star1.png'>
+      <img src='images/star1.png'>
+      <img src='images/star1.png'>
+      <img src='images/star1.png'>
+      <img src='images/star2.png'>
+    </div>
+    <div class='product_description'>
+      $pro_desc 
+    </div>
+    <div class='product_price'>
+      <div class='price'>
+         $pro_price €
+        <div class='btn btn-success'>
+        <i class='fas fa-shopping-cart'></i> Βάλτο στο Καλάθι
+        </div>
+          <a href='details.php?pro_id=$pro_id'><div class='btn btn-primary'>Περισσότερα... </div></a>
+      </div>
+    </div>
+  </div>
+</div>
+</div
+
+
+
+functions 
+
+   <div class='well text-center'></div>
+        <div class='row'>
+          <div class='product_one' style=' width: 246px; padding: 5px;margin-left: 3px;'>
+          <div class='col-md-6'>
+            <a href='details.php?pro_id=$pro_id'>
+              <img src='admin_area/product_images/$pro_img1' width='60%'>
+            </a>
+          </div>
+              <div class='product_text'>
+                <div class='product_description'>
+                  $pro_desc 
+                </div>
+              </div>
+              <div class='product_price' >
+                <div class='price'>
+                  $pro_price €
+                  <div class='btn btn-success'>
+                    Βάλτο στο Καλάθι
+                  </div>
+                  <a href='details.php?pro_id=$pro_id'><div class='btn btn-primary'>Περισσότερα... </div></a>
+                </div>
+              </div>
+            </div>  
+        <div class='col'></div>
+      </div>
+           
+          
+          ";
+
+
+
